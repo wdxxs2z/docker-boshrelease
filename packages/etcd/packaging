@@ -1,0 +1,7 @@
+set -e
+ETCD_VERSION=`ls -r etcd/etcd-*.tar.gz | sed 's/etcd\/etcd-\(.*\).tar.gz/\1/' | head -1`
+
+# Copy Etcd package
+echo "Copying Etcd ${ETCD_VERSION}..."
+tar zxvf ${BOSH_COMPILE_TARGET}/etcd/etcd-${ETCD_VERSION}.tar.gz
+cp etcd-${ETCD_VERSION}/{etcd,etcdctl} ${BOSH_INSTALL_TARGET}/

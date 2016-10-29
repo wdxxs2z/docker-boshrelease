@@ -28,8 +28,18 @@ properties:
   swarm.discovery_options:
     description: "Swarm discovery options"
     default: []
-  swarm.discovery:
-    description: "Swarm discovery string (ie: consul://<ip>/<path>, etcd://<ip1>,<ip2>/<path>, zk://<ip1>,<ip2>/<path>, [nodes://]<ip1>,<ip2>"
+  swarm.discovery_type:
+    description: "swarm discovery type (consul,etcd,zk,nodes)"
+    default: "etcd"
+  swarm.discovery_ips:
+    description: "Swarm discovery url (ie: consul://<ip>/<path>, etcd://<ip1>,<ip2>/<path>, zk://<ip1>,<ip2>/<path>, [nodes://]<ip1>,<ip2>"
+    default: ""
+  swarm.discovery_port:
+    description: "Swarm discovery ip port"
+    default: 4001
+  swarm.discovery_path:
+    description: "Swarm discovery path,if use etcd,consul,zk..."
+    default: "/swarm"
 
   docker.tcp_port:
     description: "TCP port where Docker daemon will listen to (if not set, TCP will not be available)"

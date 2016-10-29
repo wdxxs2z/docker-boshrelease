@@ -2,7 +2,7 @@ set -e # exit immediately if a simple command exits with a non-zero status
 set -u # report the usage of uninitialized variables
 
 # Set Golang dependency
-export GOROOT=$(readlink -nf /var/vcap/packages/golang)
+export GOROOT=$(readlink -nf /var/vcap/packages/golang1.6)
 export PATH=${GOROOT}/bin:${PATH}
 
 # Build Docker Swarm package
@@ -10,7 +10,8 @@ echo "Building Docker Swarm..."
 PACKAGE_NAME=github.com/docker/swarm
 mkdir -p ${BOSH_INSTALL_TARGET}/src/${PACKAGE_NAME}
 cp -a ${BOSH_COMPILE_TARGET}/${PACKAGE_NAME}/* ${BOSH_INSTALL_TARGET}/src/${PACKAGE_NAME}
-export GOPATH=${BOSH_INSTALL_TARGET}:${BOSH_INSTALL_TARGET}/src/${PACKAGE_NAME}/Godeps/_workspace
+export GOPATH=${BOSH_INSTALL_TARGET}:${BOSH_INSTALL_TARGET}/src/${PACKAGE_NAME}
+export GO15VENDOREXPERIMENT=1 
 go install ${PACKAGE_NAME}
 
 # Clean up src & pkg artifacts

@@ -50,7 +50,7 @@ export SWARM_AGENT_DISCOVERY_OPTIONS="<%= discovery_options.map { |discovery_opt
 <% end %>
 
 # Swarm discovery
-export SWARM_AGENT_DISCOVERY="<%= p('swarm.discovery') %>"
+export SWARM_AGENT_DISCOVERY="<%= p('swarm.discovery_type') %>://<%= p('swarm.discovery_ips').map { |url| "#{url}:#{p('swarm.discovery_port')}" }.join(',') %><%= p('swarm.discovery_path') %>"
 
 # Proxy configuration
 <% if_p('env.http_proxy') do |http_proxy| %>

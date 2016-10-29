@@ -39,3 +39,11 @@ docker/docker-1.12.0.tgz:
   object_id: 72f4fd48-a828-4265-8afc-22ff52fd2bb5
   sha: 92839410a37ed1940b7a93dcd21fd9aa85d673a1
   size: 28818570
+etcd/etcd-v2.3.5-linux-amd64.tar.gz:
+  object_id: 0a8e3d96-5b7d-4ae1-9971-809d981f1808
+  sha: be2edc1bb0cfec73ea5955adfb8d16b476a76e7c
+  size: 8543249
+golang/go1.6.3.linux-amd64.tar.gz:
+  object_id: 122d352b-9cd2-4261-9e47-939cf85fd25f
+  sha: 5e916ba4dd8c2fc43beafca4c08b334c4d0686f3
+  size: 84856920
