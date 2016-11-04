@@ -5,16 +5,19 @@
       element.is_a?(OpenStruct) ? { key => openstruct_to_hash(element) } : { key => element }
     end.reduce(&:merge)
   end
-
   networks = openstruct_to_hash(spec.networks)
   default_ip = networks.values.find { |net| net.has_key?(:default) }[:ip]
 %>
-host: "<%= p('broker.external_ip', default_ip) %>"
+host: "<%= p('router_register.shipyard_ip', default_ip) %>"
 routes:
-- name: "cf-containers-broker"
-  port: <%= p('broker.unicorn.port') %>
-  uris: ["<%= p('broker.host') %>"]
+- name: "shipyard-route-register"
+  port: <%= p('router_register.shipyard_port') %>
+  uris: ["<%= p('router_register.host') %>"]
   registration_interval: 20s
+  health_check:
+    name: "shipyard-config-check"
+    script_path: <%= p('router_register.shipyard_checkscript') %>
+    timeout: 15s
 message_bus_servers:
 <% p('nats.machines', []).each do |server| %>
   - host: <%= server %>:<%= p('nats.port') %>

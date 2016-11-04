@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -e # exit immediately if a simple command exits with a non-zero status
+
+source /var/vcap/packages/bosh-helpers/ctl_setup.sh 'shipyard'
+export ROUTE_REGISTRAR_PID_FILE=/var/vcap/sys/run/shipyard/route-registrar.pid
+
+case $1 in
+
+  start)
+
+    chmod +x /var/vcap/jobs/shipyard/bin/check.sh
+
+    /var/vcap/jobs/shipyard/bin/post-start
+    
+    pid_guard ${ROUTE_REGISTRAR_PID_FILE} ${JOB_NAME}
+
+    exec /var/vcap/packages/route-registrar/bin/route-registrar \
+      -configPath /var/vcap/jobs/shipyard/config/route-registrar.yml \
+      -pidfile ${ROUTE_REGISTRAR_PID_FILE} \
+      >>/var/vcap/sys/log/shipyard/route-registrar.stdout.log \
+      2>>/var/vcap/sys/log/shipyard/route-registrar.stderr.log
+    ;;
+
+  stop)
+    # Stop Route Registrar service
+    kill_and_wait ${ROUTE_REGISTRAR_PID_FILE}
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+    ;;
+
+esac
+exit 0

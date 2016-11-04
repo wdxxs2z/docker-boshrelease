@@ -1,0 +1,11 @@
+<% if_p('nats.machines') do %>
+check process shipyard-route-registrar with pidfile /var/vcap/sys/run/shipyard/route-registrar.pid
+  group vcap
+  start program "/var/vcap/packages/bosh-helpers/monit_debugger shipyard-route-registrar_ctl '/var/vcap/jobs/shipyard/bin/route-registrar_ctl start'"
+  stop program "/var/vcap/packages/bosh-helpers/monit_debugger shipyard-route-registrar_ctl '/var/vcap/jobs/shipyard/bin/route-registrar_ctl stop'"
+  depends on register_config
+
+check file register_config with path /var/vcap/jobs/shipyard/config/route-registrar.yml
+if changed timestamp then restart
+group vcap
+<% end %>

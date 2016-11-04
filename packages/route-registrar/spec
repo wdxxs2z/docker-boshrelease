@@ -3,4 +3,8 @@ name: route-registrar
 dependencies:
   - golang
 files:
-  - github.com/cloudfoundry-incubator/route-registrar/**/*
+  - route-register/src/github.com/nats-io/**/*
+  - route-register/src/github.com/nu7hatch/**/*
+  - route-register/src/github.com/tedsuo/**/*
+  - route-register/src/gopkg.in/**/*
+  - route-register/src/code.cloudfoundry.org/**/*

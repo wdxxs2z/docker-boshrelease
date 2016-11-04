@@ -1,0 +1,59 @@
+#!/bin/bash
+
+export DOCKER_HOST=<%= p('swarmmaster_ip') %>:<%= p('swarmmaster_port') %>
+export PATH=/var/vcap/packages/docker/bin:$PATH
+
+DOCKER_ERROR_RUN="Error response from daemon: No such container"
+
+container_run=`docker ps --filter "name=shipyard-rethinkdb"`
+if [[ "$container_run" =~ "shipyard-rethinkdb" ]]
+then
+    echo "The container is running"
+else
+    docker start shipyard-rethinkdb
+    container_start=`docker inspect shipyard-rethinkdb`
+    if [[ "$container_start" =~ "[]" ]]
+    then
+        docker run -ti -d --restart=always --name shipyard-rethinkdb rethinkdb
+    else
+        echo "The container now is running"
+    fi
+fi
+
+container_run=`docker ps --filter "name=docker-proxy"`
+if [[ "$container_run" =~ "docker-proxy" ]]
+then
+    echo "The container is running"
+else
+    docker start docker-proxy
+    container_start=`docker inspect docker-proxy`
+    if [[ "$container_start" =~ "[]" ]]
+    then
+        docker run -ti -d -p 2375:2375 --hostname=$HOSTNAME --restart=always --name shipyard-proxy -v /var/vcap/sys/run/docker/docker.sock:/var/run/docker.sock -e PORT=2375 shipyard/docker-proxy:latest
+    else
+        echo "The container now is running"
+    fi
+fi
+
+container_run=`docker ps --filter "name=shipyard-controller"`
+if [[ "$container_run" =~ "shipyard-controller" ]]
+then
+    echo "The container is running"
+else
+    docker start shipyard-controller
+    container_start=`docker inspect shipyard-controller`
+    if [[ "$container_start" =~ "[]" ]]
+    then
+        docker run -ti -d --restart=always --name shipyard-controller --link shipyard-rethinkdb:rethinkdb -P shipyard/shipyard:latest server -d tcp://<%= p('swarmmaster_ip') %>:<%= p('swarmmaster_port') %>
+    else
+        echo "The container now is running"
+    fi
+fi
+
+container_run=`docker ps --filter "name=shipyard-controller"`
+if [[ "$container_run" =~ "shipyard-controller" ]]
+then
+    /var/vcap/jobs/shipyard/bin/check.sh
+else
+    echo "shipyard controller is not running."
+fi

@@ -1,0 +1,40 @@
+---
+name: shipyard
+templates:
+  post-start: bin/post-start
+  bin/route-registrar_ctl.erb: bin/route-registrar_ctl
+  config/route-registrar.yml.erb: config/route-registrar.yml
+  config/route-registrar.tpl.erb: config/route-registrar.tpl
+  bin/check.sh: bin/check.sh
+packages:
+- bosh-helpers
+- route-registrar
+properties:
+  cf.api_url:
+    description: "URL of the CloudFoundry Cloud Controller"
+  router_register.host:
+    description: "shipyard host name"
+    default: shipyard
+  router_register.shipyard_ip:
+    description: "shipyard container external ip"
+    default: 127.0.0.1
+  router_register.shipyard_port:
+    description: "shipyard container external port"
+    default: 9099
+  router_register.shipyard_checkscript:
+    description: "shipyard container self check script"
+    default: /var/vcap/jobs/shipyard/bin/check.sh
+  swarmmaster_ip:
+    description: "Swarm master ip"
+  swarmmaster_port:
+    description: "Swarm master port"
+    default: 2375
+  nats.user:
+    description: "Username for broker to connect to NATS"
+  nats.password:
+    description: "Password for broker to connect to NATS"
+  nats.port:
+    description: "IP port of Cloud Foundry NATS server"
+    default: 4222
+  nats.machines:
+    description: "Array of IPs of each NATS cluster member"
