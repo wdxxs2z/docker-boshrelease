@@ -22,9 +22,14 @@ production:
   ssl_enabled: <%= p('broker.ssl_enabled') %>
   skip_ssl_validation: <%= p('broker.skip_ssl_validation') %>
 
-  host_directory: /var/vcap/store/cf-containers-broker/
+  host_directory: /var/vcap/store/persistent/shared/cf-containers-volumes
+  container_env_var_dir: '/var/vcap/store/persistent/shared/cf-containers-envdir'
+  
+  <% if_p('nfs_server.address') do |value| %>
+  remote_mountpoint: <%= value %>/shared/cf-containers-volumes
+  <% end %>
+
   max_containers: <%= p('broker.max_containers') %>
   allocate_docker_host_ports: <%= p('broker.allocate_docker_host_ports') %>
-  container_env_var_dir: '/var/vcap/store/cf-containers-broker/envdir'
 
   services: <%= JSON.pretty_generate(p('broker.services')) %>

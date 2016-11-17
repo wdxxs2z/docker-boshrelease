@@ -1,0 +1,7 @@
+---
+name: docker-volume-netshare
+
+dependencies:
+
+files:
+- docker-volume-netshare/docker-volume-netshare_0.32_linux_amd64.tar.gz

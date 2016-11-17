@@ -12,6 +12,10 @@ case $1 in
 
   start)
     pid_guard ${CF_CONTAINERS_BROKER_PID_FILE} ${JOB_NAME}
+    
+    chown -R vcap:vcap ${CF_CONTAINERS_BROKER_LOG_DIR}
+    chown -R vcap:vcap ${CF_CONTAINERS_BROKER_PID_DIR}
+
     echo $$ > ${CF_CONTAINERS_BROKER_PID_FILE}
 
     # Set limitations on system resources
@@ -36,7 +40,7 @@ case $1 in
     rm -fr ${CF_CONTAINERS_BROKER_PID_FILE}
 
     # Start CF-Containers-Broker
-    exec bundle exec unicorn \
+    exec chpst -u vcap:vcap bundle exec unicorn \
         --daemonize \
         -c $CF_CONTAINERS_BROKER_CONF_DIR/unicorn.conf.rb \
         >>${CF_CONTAINERS_BROKER_LOG_DIR}/${OUTPUT_LABEL}.stdout.log \

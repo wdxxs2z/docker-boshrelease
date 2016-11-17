@@ -1,0 +1,4 @@
+check process docker-volume-netshare with pidfile /var/vcap/sys/run/docker-volume-netshare/docker-volume-netshare.pid
+  group vcap
+  start program "/var/vcap/packages/bosh-helpers/monit_debugger docker-volume-netshare_ctl '/var/vcap/jobs/docker-volume-netshare/bin/docker-volume-netshare_ctl start'"
+  stop program "/var/vcap/packages/bosh-helpers/monit_debugger docker-volume-netshare_ctl '/var/vcap/jobs/docker-volume-netshare/bin/docker-volume-netshare_ctl stop'"

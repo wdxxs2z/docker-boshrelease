@@ -1,0 +1,4 @@
+# abort script on any command that exits with a non zero value
+set -e
+
+cp -a ${BOSH_COMPILE_TARGET}/docker-offine-images/* ${BOSH_INSTALL_TARGET}/

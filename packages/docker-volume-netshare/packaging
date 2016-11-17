@@ -1,0 +1,21 @@
+# abort script on any command that exits with a non zero value
+set -e
+
+echo "Packaging docker-volume-share"
+# We grab the latest versions that are in the directory
+DOCKER_VOLUME_NETSHARE_VERSION=`ls -r docker-volume-netshare/docker-volume-netshare_*_linux_amd64.tar.gz | sed 's/docker-volume-netshare\/docker-volume-netshare_\(.*\)_linux_amd64.tar.gz/\1/' | head -1`
+
+# Extracting Docker Volume Netshare package
+echo "Extracting Docker Volume Netshare Version ${DOCKER_VOLUME_NETSHARE_VERSION}..."
+tar xzvf ${BOSH_COMPILE_TARGET}/docker-volume-netshare/docker-volume-netshare_${DOCKER_VOLUME_NETSHARE_VERSION}_linux_amd64.tar.gz
+if [[ $? != 0 ]] ; then
+  echo "Failed extracting Docker Volume Netshare ${DOCKER_VOLUME_NETSHARE_VERSION}"
+  exit 1
+fi
+
+ls -al
+
+echo "Copying docker-volume-netshare ${DOCKER_VOLUME_NETSHARE_VERSION} binaries..."
+mkdir -p ${BOSH_INSTALL_TARGET}/bin
+cp docker-volume-netshare_*_linux_amd64/docker-volume-netshare ${BOSH_INSTALL_TARGET}/bin
+chmod +x ${BOSH_INSTALL_TARGET}/bin/*

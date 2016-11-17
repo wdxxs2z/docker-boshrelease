@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -e # exit immediately if a simple command exits with a non-zero status
+
+# Setup common env vars and folders
+source /var/vcap/packages/bosh-helpers/ctl_setup.sh 'docker-volume-netshare'
+export DOCKER_VOLUME_NETSHARE_PID_FILE=${DOCKER_VOLUME_NETSHARE_PID_DIR}/docker-volume-netshare.pid
+
+export PATH=/var/vcap/packages/docker-volume-netshare/bin:$PATH
+
+export NFS_VERSION=<%= p('nfs.version') %>
+export NFS_OPTIONS=<%= p('nfs.options') %>
+
+case $1 in
+
+  start)
+    pid_guard ${DOCKER_VOLUME_NETSHARE_PID_FILE} ${JOB_NAME}
+    echo $$ > ${DOCKER_VOLUME_NETSHARE_PID_FILE}
+
+    # We remove the PID file (own process) to prevent a collision with Unicorn
+    rm -fr ${DOCKER_VOLUME_NETSHARE_PID_FILE}
+
+    # Start docker-volume-netshare
+    docker-volume-netshare nfs -v ${NFS_VERSION} -o ${NFS_OPTIONS} \
+      >>${DOCKER_VOLUME_NETSHARE_LOG_DIR}/${OUTPUT_LABEL}.stdout.log \
+      2>>${DOCKER_VOLUME_NETSHARE_LOG_DIR}/${OUTPUT_LABEL}.stderr.log &
+
+    PID=$!
+    echo $PID > ${DOCKER_VOLUME_NETSHARE_PID_FILE}
+    ;;
+
+  stop)
+    # Stop DOCKER_VOLUME_NETSHARE
+    kill_and_wait ${DOCKER_VOLUME_NETSHARE_PID_FILE}
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+    ;;
+
+esac
+exit 0

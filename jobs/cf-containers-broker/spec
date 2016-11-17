@@ -62,6 +62,9 @@ properties:
   cf.api_url:
     description: "URL of the CloudFoundry Cloud Controller"
 
+  nfs_server.address:
+    description: "NFS server address,if volume persistent need."
+
   nats.user:
     description: "Username for broker to connect to NATS"
   nats.password:
