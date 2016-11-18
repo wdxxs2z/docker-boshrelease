@@ -40,7 +40,7 @@ case $1 in
     rm -fr ${CF_CONTAINERS_BROKER_PID_FILE}
 
     # Start CF-Containers-Broker
-    exec chpst -u vcap:vcap bundle exec unicorn \
+    exec bundle exec unicorn \
         --daemonize \
         -c $CF_CONTAINERS_BROKER_CONF_DIR/unicorn.conf.rb \
         >>${CF_CONTAINERS_BROKER_LOG_DIR}/${OUTPUT_LABEL}.stdout.log \
