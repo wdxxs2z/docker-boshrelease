@@ -14,7 +14,7 @@ else
     container_start=`docker inspect shipyard-rethinkdb`
     if [[ "$container_start" =~ "[]" ]]
     then
-        docker run -ti -d --restart=always --name shipyard-rethinkdb rethinkdb
+        docker run -ti -d --restart=always --name shipyard-rethinkdb rethinkdb:latest
     else
         echo "The container now is running"
     fi
